@@ -1,0 +1,32 @@
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'application'
+
+
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+    flatDir {
+        dirs 'libs'
+    }
+
+    maven{
+        url "gradle.org"
+    }
+   
+}
+
+mainClassName = 'main.main'
+
+dependencies {
+    implementation 'com.formdev:flatlaf:1.1.2'
+    implementation 'io.github.vincenzopalazzo:material-ui-swing:1.1.2-rc1'
+    compile(name : 'miglayout-3.5.5' , ext : 'jar')
+    compile(name : 'edisoncorSX' , ext : 'jar')
+    compile fileTree(dir : 'libs/jcalendar' , include :'*.jar')
+    implementation 'com.formdev:flatlaf-swingx:1.1.2'
+    implementation 'org.postgresql:postgresql:42.2.20'
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.13-RC4'
+}
