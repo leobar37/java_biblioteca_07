@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public class LeTableModel<T , R> extends DefaultTableModel {
+public class LeTableModel<T > extends DefaultTableModel {
     /*
      * Problema:
      *
@@ -35,25 +35,21 @@ public class LeTableModel<T , R> extends DefaultTableModel {
 
     private EventListenerList listenerList;
     private List columnIdentifiers;
-    private  Map<R ,T> listData = new HashMap<R , T>();
-    private Function<T, R> consumer;
+    private  Map<Integer ,T> listData = new HashMap<Integer , T>();
+    
     private  Function<T , Object[]>  callbackRow;
-
-    public LeTableModel(Function<T, R> consumer , Function<T , Object[]>  callbackRow){
+   /**
+    * 
+    * @param consumer :  ES UN CALLBAK UTILIZADO PARA OBTENER LA KEY DEL OBJECTO
+    * @param callbackRow  : ES UN CALLBACK UTILIZADO PARA OBTENER LA FILA DE LA TABLA
+    */
+    public LeTableModel(Function<T , Object[]>  callbackRow){
         columnIdentifiers = new ArrayList();
         listenerList = new EventListenerList();
-        this.consumer = consumer;
+       
         this.callbackRow = callbackRow;
     }
-    public LeTableModel(Function<T, R> consumer, List columnIdentifiers, Function<T , Object[]>  callbackRow){
-        this(consumer ,callbackRow);
-        if (columnIdentifiers == null) {
-            throw new IllegalArgumentException("El parámetro columnIdentifers no puede ser null.");
-        } else {
-            this.columnIdentifiers.addAll(columnIdentifiers);
-        }
-    }
-
+    
     /* ***************** *
      * Manejo de eventos *
      * ***************** */
@@ -162,16 +158,11 @@ public class LeTableModel<T , R> extends DefaultTableModel {
     }
     public void addRow(T domainObject)  {
         int rowIndex = listData.size();
-         R key =  this.consumer.apply(domainObject);
-
-         if(this.listData.containsKey(key)){
-             System.err.println(String.format("%s key already exists" , key));
-
-         }
-        System.out.println("add row");
+        
+         
          super.addRow(this.callbackRow.apply(domainObject));
 
-         this.listData.put(key, domainObject);
+         this.listData.put(rowIndex, domainObject);
         notifyTableRowsInserted(rowIndex, rowIndex);
     }
     public void addRows(List<T> domainObjects) {
@@ -195,7 +186,7 @@ public class LeTableModel<T , R> extends DefaultTableModel {
     /**
      * Return objet by key
      */
-    public T get(R key){
+    public T get(int key){
         return  listData.get(key);
     }
 

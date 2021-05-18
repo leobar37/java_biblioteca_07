@@ -5,6 +5,7 @@
  */
 package view;
 
+import javax.swing.WindowConstants;
 import utils.Uiutils;
 
 /**
@@ -15,12 +16,15 @@ public class frmPrincipal extends javax.swing.JFrame {
 
   
     public frmPrincipal() {
+         
         initComponents();
+         this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
     }
     static frmPrincipal open(){
         frmPrincipal principal = new frmPrincipal();
         principal.setLocationRelativeTo(null);
         principal.setVisible(true);
+      
         return principal ;
     }
     @SuppressWarnings("unchecked")

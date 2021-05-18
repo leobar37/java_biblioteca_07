@@ -23,10 +23,9 @@ import javax.swing.*;
 
 
 import controllers.ReaderController;
-import mdlaf.utils.MaterialColors;
 
 
-
+import globals.Constants;
 import models.Lector;
 import models.Person;
 import models.enums.Sexo;
@@ -34,11 +33,7 @@ import net.miginfocom.layout.CC;
 import net.miginfocom.swing.MigLayout;
 import utils.Alterns;
 import utils.Dialogs;
-
-@FunctionalInterface
-interface BuildFielCall {
-    public void effect(JPanel containerField);
-}
+import models.BuildFielCall;
 
 public class PanerlMantenainceLector extends JPanel {
 
@@ -78,7 +73,7 @@ public class PanerlMantenainceLector extends JPanel {
     JTextField textPhone = new JTextField();
 
     // constants
-      private final int HEIGHTINPUT = 38;
+
       // buttons
     JButton new_  = new JButton("Nuevo");
     JButton delete = new JButton("Eliminar");
@@ -119,7 +114,7 @@ public class PanerlMantenainceLector extends JPanel {
         this.eventSerachLectorForDni();
         this.modifyLector();
         this.cleanForm();
-
+        
         // test value
        // this.patchValuesTest();
 
@@ -273,7 +268,7 @@ public class PanerlMantenainceLector extends JPanel {
 
 
     private Dimension applySizeInput(int width) {
-        return new Dimension(width, HEIGHTINPUT);
+        return new Dimension(width, Constants.HEIGHTINPUT);
     }
 
 
@@ -281,7 +276,7 @@ public class PanerlMantenainceLector extends JPanel {
     private void buildFieldCallback(BuildFielCall call) {
         JPanel container = new JPanel(new MigLayout("", "[][]", "[]"));
         call.effect(container);
-        container.setPreferredSize(new Dimension(500, HEIGHTINPUT));
+        container.setPreferredSize(new Dimension(500,  Constants.HEIGHTINPUT));
         this.add(container, "span");
     }
 
@@ -290,7 +285,7 @@ public class PanerlMantenainceLector extends JPanel {
         container.add(label, "w 30%");
         input.setPreferredSize(this.applySizeInput(dniText.getWidth()));
         container.add(input, "w 70%");
-        container.setPreferredSize(new Dimension(500, HEIGHTINPUT));
+        container.setPreferredSize(new Dimension(500, Constants.HEIGHTINPUT));
         this.add(container, "span");
 
     }

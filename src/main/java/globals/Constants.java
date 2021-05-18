@@ -5,6 +5,8 @@
  */
 package globals;
 
+import java.awt.Dimension;
+
 /**
  *
  * @author USER
@@ -21,5 +23,9 @@ public  class Constants{
    // alternatives SHA1 - MD5
    public final static String  ALGORTIH_PASSWORD  = "MD5";
    
-    private Constants(){}
+   public final static Dimension sizeWindow = new Dimension(1100, 700);
+
+   public static final int HEIGHTINPUT = 38;
+   public  static final Dimension fieldDimesion =  new Dimension(500 , HEIGHTINPUT + 20);
+   private Constants(){}
 }

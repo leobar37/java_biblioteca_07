@@ -30,7 +30,7 @@ import net.miginfocom.layout.*;
 import net.miginfocom.swing.MigLayout;
 import ui.LabelTitle;
 import ui.PanerlMantenainceLector;
-
+import globals.Constants;
 
 /**
  *
@@ -39,10 +39,8 @@ import ui.PanerlMantenainceLector;
 public class FrmLector extends javax.swing.JFrame {
     
    
-    
     static FrmLector open(){
        FrmLector lector = new FrmLector();
-       lector.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
        lector.setLocationRelativeTo(null);
        lector.setVisible(true);
        return lector;
@@ -50,12 +48,12 @@ public class FrmLector extends javax.swing.JFrame {
     
     @FunctionalInterface
     interface  callBacModelTable{
-        public void callback(LeTableModel<Lector, String>  table);
+        public void callback(LeTableModel<Lector>  table);
     }
     /**
      * Creates new form FrmLector
      */
-    private final Dimension sizeWindow = new Dimension(1100, 700);
+  
     JPanel container;
 
     // right side
@@ -66,16 +64,18 @@ public class FrmLector extends javax.swing.JFrame {
 
         initComponents();
         this.setResizable(false);
+        this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         this.instanceCustomComponents();
     }
 
     private void instanceCustomComponents() {
 
-        this.setSize(sizeWindow);
+        this.setSize(Constants.sizeWindow);
         container = new JPanel(new GridLayout( 1 , 2 , 10 , 10));
 
-        container.setSize(new Dimension(sizeWindow.width - 40 ,  sizeWindow.height - 80));
+        container.setSize(new Dimension(Constants.sizeWindow.width - 40 ,  Constants.sizeWindow.height - 80));
         // panel lector
+       
         PanerlMantenainceLector panelLector = new PanerlMantenainceLector(this.readerController);
         Consumer<Void>  updateLectors = (e) ->{
             this.addLectosInTable();
@@ -83,7 +83,7 @@ public class FrmLector extends javax.swing.JFrame {
         // when lectors have been updated
         panelLector.updateLectorsConsummer = updateLectors;
 
-        panelLector.setPreferredSize(new Dimension(panelLector.getWidth(), sizeWindow.height));
+        panelLector.setPreferredSize(new Dimension(panelLector.getWidth(), Constants.sizeWindow.height));
 
         container.add(panelLector );
 
@@ -98,9 +98,7 @@ public class FrmLector extends javax.swing.JFrame {
      try {
          String[] columns = { "Dni" , "Nombre" , "Apellido", "Sexo" , "Teléfono", "Vigencia"};
 
-         LeTableModel<Lector, String> tableModel = new LeTableModel<Lector ,String>(lector -> {
-             return lector.getDni();
-         } , lector -> {
+         LeTableModel<Lector> tableModel = new LeTableModel<Lector >( lector -> {
              Object[]  row = {  lector.getDni() , lector.getName() , lector.getLastName() , lector.getSexLabel() , lector.getPhone() ,lector.getLabelVigencia()};
              return  row;
          });
@@ -151,7 +149,7 @@ public class FrmLector extends javax.swing.JFrame {
        
 
 
-        table.setPreferredSize(new Dimension(600, sizeWindow.height));
+        table.setPreferredSize(new Dimension(600, Constants.sizeWindow.height));
 
         panelRight.add(table ,  new CC().gapY("10px", "50px"));
         

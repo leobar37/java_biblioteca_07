@@ -6,6 +6,7 @@
 package view;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 
 public class LoguinForm extends javax.swing.JDialog {
@@ -13,6 +14,7 @@ public class LoguinForm extends javax.swing.JDialog {
   
     public LoguinForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
+        this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         initComponents(); 
     }
      

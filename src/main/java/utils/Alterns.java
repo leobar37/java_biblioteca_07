@@ -23,9 +23,7 @@ public class Alterns {
     //metodo 1 acomoda el nombre
     public static String AcomodaNombre(String nombre) {
         //hacer minuscula todas las letras
-
         String[] nombres = nombre.split(" ");
-
         String nombreAc = "";
         for (int i = 0; i < nombres.length; i++) {
             int n = nombres[i].length();

@@ -22,4 +22,12 @@ public class Validations {
             }
         });
     }
+    
+    public static boolean StrinRequied(String value){
+        return value.length() == 0;
+    }
+    
+    
+    
+    
 }

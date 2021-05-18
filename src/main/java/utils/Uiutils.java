@@ -26,4 +26,10 @@ public class Uiutils {
        wind.setLocationRelativeTo(null);
        wind.setVisible(true);
    }
+   public  static int getPercent(int percent , int width){
+       System.out.println(width);
+       System.out.println(percent);
+       System.out.println((int) Math.floor(percent *  width / 100));
+       return (int) Math.floor(percent * width / 100);
+   }
 }
