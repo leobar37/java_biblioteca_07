@@ -142,7 +142,7 @@ public class TrackerForm extends AbtractTrackerForm {
                  if(field.messageError !=  null){
                      return field.messageError;
                  }else{
-                     return  "Existen campos vacios";
+                     return  "Error de formulario";
                  }
              }
           }

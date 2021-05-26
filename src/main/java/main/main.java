@@ -10,6 +10,7 @@ import javax.swing.UIManager;
 
 import org.reactivestreams.Subscription;
 import utils.Uiutils;
+import view.FrmArea;
 import view.FrmEditorial;
 import view.FrmLector;
 import view.LoguinForm;
@@ -22,8 +23,10 @@ public class main {
           UIManager.setLookAndFeel(new MaterialLookAndFeel(new MaterialLiteTheme()));
           
           //LoguinForm.open();
-            FrmEditorial.open();
-           // principal.setLocationRelativeTo(null);
+            //FrmEditorial.open();
+           // frmPrincipal.open();
+            FrmArea.open();
+// principal.setLocationRelativeTo(null);
             //FrmLector  frmLector = new FrmLector();
             //Uiutils.openWindow(frmLector);
             // frmLector.setVisible(true);

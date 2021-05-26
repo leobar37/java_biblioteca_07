@@ -26,6 +26,10 @@ public class Dialogs {
    public  static int confirmMessage(String message, String title){
        return JOptionPane.showConfirmDialog(null , title,message , JOptionPane.YES_NO_CANCEL_OPTION);
    }
+   
+   public static void bderrorMessage(){
+       Dialogs.errorMessage("Hubo problemas al comunicarnos con la base de datos");
+   }
 
     
 }

@@ -11,23 +11,18 @@ import controllers.EditorialController;
 import core.tablemodel.LeTableModel;
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 
-import globals.Constants;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.sql.Array;
+
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import models.Editorial;
 
 import net.miginfocom.swing.MigLayout;
-import org.edisoncor.gui.textField.TextField;
-import ui.LabelTitle;
+
 import utils.Dialogs;
 import utils.Uiutils;
 
@@ -44,12 +39,13 @@ public class FrmEditorial extends javax.swing.JFrame {
     public static FrmEditorial open() {
         FrmEditorial form = new FrmEditorial();
         form.setLocationRelativeTo(null);
+        form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         form.setVisible(true);
         return form;
     }
     EditorialController editorialController = EditorialController.instance();
 
-    Dimension sizeWindow = new Dimension(800, 450);
+    Dimension sizeWindow = new Dimension(650, 250);
 
     private Editorial currentEditorial = null;
 
@@ -120,13 +116,12 @@ public class FrmEditorial extends javax.swing.JFrame {
                         Optional<Editorial> editorialopt = this.editorialController.updateNode(this.currentEditorial.getCodigo(), editoria);
                         if (editorialopt.isPresent()) {
                             Dialogs.successMessage("Se ha editado una editorial");
-
+                            this.clean();
+                           
                         }
-
                     } else {
                         Optional<Editorial> editorialopt = this.editorialController.createNode(editoria);
                         if (editorialopt.isPresent()) {
-
                             Dialogs.successMessage("Se ha creado una nueva editorial");
                             this.updateState(editorialopt.get());
                         }
@@ -208,7 +203,7 @@ public class FrmEditorial extends javax.swing.JFrame {
     }
 
     private JPanel tableRight() {
-        JPanel panel = new JPanel(new MigLayout("fillx", "[center]", "nogrid"));
+        JPanel panel = new JPanel(new MigLayout("fillx", "[left]", "nogrid"));
         panel.setPreferredSize(new Dimension(sizeWindow.width / 2, sizeWindow.height));
         String[] columns = {"Codigo", "Nombre", "vigencia"};
 
@@ -224,7 +219,7 @@ public class FrmEditorial extends javax.swing.JFrame {
 
                 modelo.addRow(e);
             });
-            this.table.setSize(new Dimension(350, sizeWindow.height));
+            this.table.setSize(new Dimension(450, sizeWindow.height));
 
             this.table.setModel(modelo);
             // event table
