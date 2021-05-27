@@ -52,11 +52,33 @@ public class bdConnection {
         return value;
     }
 
-    public  <T> T transaction(ConnectionCallback<T> call) throws SQLException {
+    public static ResultSet fastQueries(String query) throws SQLException {
+        return bdConnection.secureConnection(conn -> {
+            PreparedStatement st = conn.prepareStatement(query);
+            return st.executeQuery();
+        });
+    }
+
+    public static boolean multiplesQueriesTransaction(String... queries) throws SQLException {
+        return bdConnection.transaction(conn -> {
+
+            try {
+                for (String query : queries) {
+                    bdConnection.fastQueries(query);
+                }
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+
+        });
+    }
+
+    public static <T> T transaction(ConnectionCallback<T> call) throws SQLException {
         Connection con = getConnection();
         try {
             con.setAutoCommit(false);
-
             T value = call.callback(con);
             con.commit();
             return value;
@@ -64,7 +86,7 @@ public class bdConnection {
             e.printStackTrace();
 
             con.rollback();
-            throw new SQLException();
+            throw new SQLException(e);
         }
 
     }

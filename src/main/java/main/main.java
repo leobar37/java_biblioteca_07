@@ -13,6 +13,8 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import mdlaf.MaterialLookAndFeel;
 import mdlaf.themes.JMarsDarkTheme;
 import javax.swing.UIManager;
+import mdlaf.themes.MaterialLiteTheme;
+import mdlaf.themes.MaterialOceanicTheme;
 
 import org.reactivestreams.Subscription;
 import utils.Uiutils;
@@ -30,7 +32,7 @@ public class main {
 
     public static void main(String[] args) {
         try {
-          UIManager.setLookAndFeel(new MaterialLookAndFeel(new JMarsDarkTheme()));
+          UIManager.setLookAndFeel(new MaterialLookAndFeel(new MaterialLiteTheme()));
           //LoguinForm.open();
             FrmPrestamo.open();
 //FrmEditorial.open();

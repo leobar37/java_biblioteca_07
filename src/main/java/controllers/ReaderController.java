@@ -185,4 +185,30 @@ public class ReaderController {
         return lectors;
     }
     
+       // getLectors
+    public LinkedList<Lector> getLectors(String query) throws SQLException{
+        lectors = new LinkedList<Lector>();
+       /*
+       * Article: https://www.baeldung.com/java-void-type
+       * */
+       ConnectionCallback<LinkedList<Lector>>  callConnection = (Connection conn) -> {
+          LinkedList<Lector> lectors2  = new LinkedList<Lector>();
+               PreparedStatement statement = conn.prepareStatement("select * from lector " +  query);
+               ResultSet rs = statement.executeQuery();
+               while(rs.next()){
+
+                   lectors2.add(this.getLectorRest(rs).get());
+               }
+               rs.close();
+               return lectors2;
+        };
+       try {
+           this.lectors =  bdConnection.secureConnection(callConnection);
+       }catch (SQLException ex){
+           System.err.println(ex.getMessage());
+       }
+        System.out.println(lectors.size());
+        return lectors;
+    }
+    
 }
