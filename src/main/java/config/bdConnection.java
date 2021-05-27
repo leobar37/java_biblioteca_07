@@ -42,6 +42,8 @@ public class bdConnection {
             Logger.getLogger(bdConnection.class.getName()).log(Level.SEVERE, "Error connection bd", ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(bdConnection.class.getName()).log(Level.SEVERE, "class not found", ex);
+        }finally{
+            bdConnection.conn.close();
         }
         return bdConnection.conn;
     }

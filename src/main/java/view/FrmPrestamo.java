@@ -53,11 +53,11 @@ public class FrmPrestamo extends javax.swing.JDialog {
         initComponents();
         this.initCamps = new InitCamps();
         
-        try {
+       /* try {
             this.changueState(this.controller.getNode(8).get());
         } catch (SQLException ex) {
             Logger.getLogger(FrmPrestamo.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
     }
 
     public static FrmPrestamo open() {

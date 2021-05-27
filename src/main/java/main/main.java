@@ -33,8 +33,8 @@ public class main {
     public static void main(String[] args) {
         try {
           UIManager.setLookAndFeel(new MaterialLookAndFeel(new MaterialLiteTheme()));
-          //LoguinForm.open();
-            FrmPrestamo.open();
+          LoguinForm.open();
+            //FrmPrestamo.open();
 //FrmEditorial.open();
          // frmPrincipal.open();
            // FrmArea.open();
