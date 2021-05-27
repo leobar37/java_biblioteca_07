@@ -7,63 +7,50 @@ package view;
 
 import TrackerFom.TrackerForm;
 import TrackerFom.Validations;
-import controllers.AreaController;
+import controllers.AuthorController;
 import core.tablemodel.LeTableModel;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.WindowConstants;
-import models.Area;
+
+import models.Author;
 import utils.Dialogs;
 
 /**
  *
  * @author USER
  */
-public class FrmArea extends javax.swing.JDialog {
+public class FrmAutor extends javax.swing.JDialog {
 
-    private Area currentArea = null;
-
+    /**
+     * Creates new form FrmAutor
+     */
     private TrackerForm formTrack = new TrackerForm();
-    public AreaController areacontroller = AreaController.instance();
-
-    public FrmArea(java.awt.Frame parent, boolean modal) {
+    private Author currentNode = null;
+    private AuthorController conrtroller = AuthorController.instance();
+    public FrmAutor(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
-
         initComponents();
-        ButtonGroup btns = new ButtonGroup();
-        btns.add(stdSuspend);
-        btns.add(stdVigente);
-       
+        
         this.initFields();
         this.fillTable(null);
     }
 
-    private void initFields() {
-
-        this.formTrack.addField("code", txtCodigo, Integer.class);
-        this.formTrack.addField("name", txtName, String.class, value -> {
-            return Validations.StrinRequied(value);
-        }, "El nombre es requerido");
-        txtCodigo.setEnabled(false);
-
-        Validations.limitOnlyNumbers(txtCodigo, 60);
+      private boolean isEditMode() {
+        return this.currentNode != null;
     }
-
-    public static FrmArea open() {
-        FrmArea frm = new FrmArea(null, false);
+      
+     public static FrmAutor open() {
+        FrmAutor frm = new FrmAutor(null, false);
         frm.setLocationRelativeTo(null);
         frm.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frm.setVisible(true);
         return frm;
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -75,31 +62,29 @@ public class FrmArea extends javax.swing.JDialog {
 
         floatMen = new javax.swing.JPopupMenu();
         delete = new javax.swing.JMenuItem();
-        supend = new javax.swing.JMenuItem();
         container = new javax.swing.JPanel();
         Area = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         form = new javax.swing.JPanel();
-        input_codigo = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        codigo = new javax.swing.JPanel();
-        txtCodigo = new javax.swing.JTextField();
-        btnGenerateCode = new javax.swing.JButton();
         input_nombre = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         txtName = new javax.swing.JTextField();
-        input_vigencia = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        vigencia = new javax.swing.JPanel();
-        stdVigente = new javax.swing.JRadioButton();
-        stdSuspend = new javax.swing.JRadioButton();
+        input_apellidos = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        txtApellidos = new javax.swing.JTextField();
+        input_pais = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        txtPais = new javax.swing.JTextField();
+        input_fechanacimiento = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jdateNacimiento = new com.toedter.calendar.JDateChooser();
         buttons = new javax.swing.JPanel();
         btnSave = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         table_pane = new javax.swing.JPanel();
         lblTotalArea = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tanleAreas = new javax.swing.JTable();
+        tableAuthor = new javax.swing.JTable();
 
         delete.setText("Eliminar");
         delete.addActionListener(new java.awt.event.ActionListener() {
@@ -108,14 +93,6 @@ public class FrmArea extends javax.swing.JDialog {
             }
         });
         floatMen.add(delete);
-
-        supend.setText("Cambiar estado");
-        supend.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                supendActionPerformed(evt);
-            }
-        });
-        floatMen.add(supend);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -129,35 +106,11 @@ public class FrmArea extends javax.swing.JDialog {
         Area.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 20));
 
         jLabel5.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
-        jLabel5.setText("Mantenimiento de Area");
+        jLabel5.setText("Mantenimiento de Author");
         Area.add(jLabel5);
 
         form.setPreferredSize(new java.awt.Dimension(380, 500));
         form.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 20));
-
-        input_codigo.setPreferredSize(new java.awt.Dimension(350, 75));
-        input_codigo.setLayout(new java.awt.BorderLayout(6, 6));
-
-        jLabel4.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel4.setText("Codigo:");
-        input_codigo.add(jLabel4, java.awt.BorderLayout.PAGE_START);
-
-        codigo.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 8, 5));
-
-        txtCodigo.setPreferredSize(new java.awt.Dimension(100, 30));
-        codigo.add(txtCodigo);
-
-        btnGenerateCode.setPreferredSize(new java.awt.Dimension(35, 35));
-        btnGenerateCode.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGenerateCodeActionPerformed(evt);
-            }
-        });
-        codigo.add(btnGenerateCode);
-
-        input_codigo.add(codigo, java.awt.BorderLayout.CENTER);
-
-        form.add(input_codigo);
 
         input_nombre.setPreferredSize(new java.awt.Dimension(350, 60));
         input_nombre.setLayout(new java.awt.BorderLayout(10, 10));
@@ -171,24 +124,39 @@ public class FrmArea extends javax.swing.JDialog {
 
         form.add(input_nombre);
 
-        input_vigencia.setPreferredSize(new java.awt.Dimension(350, 60));
-        input_vigencia.setLayout(new java.awt.BorderLayout(10, 10));
+        input_apellidos.setPreferredSize(new java.awt.Dimension(350, 60));
+        input_apellidos.setLayout(new java.awt.BorderLayout(10, 10));
 
-        jLabel3.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jLabel3.setText("Estado:");
-        input_vigencia.add(jLabel3, java.awt.BorderLayout.PAGE_START);
+        jLabel6.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel6.setText("Apellidos:");
+        input_apellidos.add(jLabel6, java.awt.BorderLayout.PAGE_START);
 
-        vigencia.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
+        txtApellidos.setPreferredSize(new java.awt.Dimension(80, 30));
+        input_apellidos.add(txtApellidos, java.awt.BorderLayout.PAGE_END);
 
-        stdVigente.setText("vigente");
-        vigencia.add(stdVigente);
+        form.add(input_apellidos);
 
-        stdSuspend.setText("suspendido");
-        vigencia.add(stdSuspend);
+        input_pais.setPreferredSize(new java.awt.Dimension(350, 60));
+        input_pais.setLayout(new java.awt.BorderLayout(10, 10));
 
-        input_vigencia.add(vigencia, java.awt.BorderLayout.CENTER);
+        jLabel8.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel8.setText("Pais");
+        input_pais.add(jLabel8, java.awt.BorderLayout.PAGE_START);
 
-        form.add(input_vigencia);
+        txtPais.setPreferredSize(new java.awt.Dimension(80, 30));
+        input_pais.add(txtPais, java.awt.BorderLayout.PAGE_END);
+
+        form.add(input_pais);
+
+        input_fechanacimiento.setPreferredSize(new java.awt.Dimension(350, 60));
+        input_fechanacimiento.setLayout(new java.awt.BorderLayout(10, 10));
+
+        jLabel7.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jLabel7.setText("Fecha de Nacimiento:");
+        input_fechanacimiento.add(jLabel7, java.awt.BorderLayout.PAGE_START);
+        input_fechanacimiento.add(jdateNacimiento, java.awt.BorderLayout.CENTER);
+
+        form.add(input_fechanacimiento);
 
         buttons.setPreferredSize(new java.awt.Dimension(400, 60));
 
@@ -219,10 +187,10 @@ public class FrmArea extends javax.swing.JDialog {
         table_pane.setPreferredSize(new java.awt.Dimension(500, 510));
         table_pane.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 5, 10));
 
-        lblTotalArea.setText("Total de Areas:");
+        lblTotalArea.setText("Total de Authores:");
         table_pane.add(lblTotalArea);
 
-        tanleAreas.setModel(new javax.swing.table.DefaultTableModel(
+        tableAuthor.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -233,12 +201,12 @@ public class FrmArea extends javax.swing.JDialog {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tanleAreas.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableAuthor.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tanleAreasMouseClicked(evt);
+                tableAuthorMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(tanleAreas);
+        jScrollPane1.setViewportView(tableAuthor);
 
         table_pane.add(jScrollPane1);
 
@@ -248,84 +216,80 @@ public class FrmArea extends javax.swing.JDialog {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(container, javax.swing.GroupLayout.PREFERRED_SIZE, 974, Short.MAX_VALUE)
+            .addComponent(container, javax.swing.GroupLayout.PREFERRED_SIZE, 998, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(container, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void clean() {
-      
-      this.changueState(null);
+  
+    private void initFields(){
+        this.formTrack.addField("name", txtName, String.class, value -> {
+            return Validations.StrinRequied(value);
+        }, "El nombre es requerido");
+        this.formTrack.addField("apellidos", txtApellidos, String.class, value -> {
+            return Validations.StrinRequied(value);
+        }, "Los apellidos son requerido");
+        
+         this.formTrack.addField("pais", txtPais, String.class, value -> {
+            return Validations.StrinRequied(value);
+        }, "El pai es requerido");
+          this.formTrack.addField("fechanac", jdateNacimiento, Date.class);
+        
     }
-
-    private Area obtainValues() {
-
-        int code = (int) this.formTrack.getValue("code");
-        String nombre = (String) this.formTrack.getValue("name");
-        boolean vigencia = false;
-        if (stdSuspend.isSelected()) {
-            vigencia = false;
-        }
-        if (stdVigente.isSelected()) {
-            vigencia = true;
-        }
-        Area objarea = new Area(code, nombre, vigencia);
-
-        return objarea;
+    private void patchValues(Author node){
+        txtName.setText(node.getNombre());
+        txtPais.setText(node.getApellidos());
+        jdateNacimiento.setDate(node.getFechaNac());
+        txtApellidos.setText(node.getApellidos());
     }
-
-    private void changueState(Area objArea) {
-        if (objArea == null) {
+    private Author obtainValues(){
+         String name = (String)this.formTrack.getValue("name");
+         String apellidos = (String)this.formTrack.getValue("apellidos");
+         String pais = (String)this.formTrack.getValue("pais");
+         Date  fechaNac = (Date)this.formTrack.getValue("fechanac");
+         Author objAuthor = new Author();
+         objAuthor.setApellidos(apellidos);
+         objAuthor.setNombre(name);
+         objAuthor.setPais(pais);
+         objAuthor.setFechaNac(fechaNac);
+        return objAuthor;
+    }
+      private void changueState(Author node) {
+        if (node == null) {
            this.btnSave.setText("Guardar");
-            this.currentArea = null;
+            this.currentNode = null;
            this.formTrack.cleanForm();
-          
+                
         } else {
             this.btnSave.setText("Guardar cambios");
-            this.patchValues(objArea);
-            this.currentArea = objArea;
+            this.patchValues(node);
+            this.currentNode = node;
 
         }
     }
-
-    private void patchValues(Area objArea) {
-        txtCodigo.setText(String.valueOf(objArea.getCodArea()));
-        txtName.setText(objArea.getNombre());
-        if (objArea.isVigencia()) {
-            stdVigente.setSelected(objArea.isVigencia());
-        } else {
-            stdSuspend.setSelected(objArea.isVigencia());
-        }
-
-    }
-
-    private void fillTable(String query) {
-        Object[] columns = {"Codigo", "Nombre", "Estado"};
-        LeTableModel<Area> modelo = new LeTableModel<Area>(area -> {
-            return new Object[]{area.getCodArea(), area.getNombre(), area.labelVigencia()};
+    
+      private void fillTable(String query){
+         Object[] columns = {"Nombre", "Apellidos", "pais", "F. Nacimiento"};
+        LeTableModel<Author> modelo = new LeTableModel<Author>(node -> {
+            return new Object[]{node.getNombre() , node.getApellidos() , node.getPais() , node.getFechaNac()};
         });
         modelo.addColumns(Arrays.asList(columns));
         try {
-            this.areacontroller.updateNodes("").forEach(area -> {
-                modelo.addRow(area);
+            this.conrtroller.updateNodes("").forEach(node -> {
+                modelo.addRow(node);
             });
-            tanleAreas.setModel(modelo);
+            tableAuthor.setModel(modelo);
         } catch (SQLException ex) {
             Dialogs.bderrorMessage();
         }
-    }
-
-    private boolean isEditMode() {
-        return this.currentArea != null;
-    }
-
+      }
+      
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
 
         if (!this.formTrack.isValid()) {
@@ -335,17 +299,17 @@ public class FrmArea extends javax.swing.JDialog {
         try {
             // save
             if (!isEditMode()) {
-                Optional<Area> optArea = areacontroller.createNode(this.obtainValues());
-                if (optArea.isPresent()) {
-                    Dialogs.successMessage("Area correctamente creada");
-                    this.changueState(optArea.get());
+                Optional<Author> optNode = conrtroller.createNode(this.obtainValues());
+                if (optNode.isPresent()) {
+                    Dialogs.successMessage("Se ha creado un author");
+                    this.changueState(optNode.get());
                 } else {
                     throw new Exception();
                 }
             } else {
                 // edit
-                Optional<Area> optArea = areacontroller.updateNode(this.currentArea.getCodArea(), this.obtainValues());
-                if (optArea.isPresent()) {
+                Optional<Author> optNode = conrtroller.updateNode(this.currentNode.getCodigo(), this.obtainValues());
+                if (optNode.isPresent()) {
                     Dialogs.successMessage("Se ha editado un registro");
                     this.changueState(null);
                 } else {
@@ -358,32 +322,26 @@ public class FrmArea extends javax.swing.JDialog {
             ex.printStackTrace();
             Dialogs.errorMessage("Tubimos un problema Al hacer esta operacion");
         }
-
     }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void btnGenerateCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateCodeActionPerformed
-        try {
-            // TODO add your handling code here:
-            int d = this.areacontroller.generateCode();
-            if (d == -1) {
-                throw new SQLException();
-            }
-            txtCodigo.setText(String.valueOf(d));
+    
+   
+    
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+       this.changueState(null);
+       this.resolvePopup();
 
-        } catch (SQLException ex) {
-            Dialogs.bderrorMessage();
-        }
-    }//GEN-LAST:event_btnGenerateCodeActionPerformed
+    }//GEN-LAST:event_jButton2ActionPerformed
 
-    private Area selectedCurrentArea() {
-        LeTableModel<Area> modelo = (LeTableModel<Area>) tanleAreas.getModel();
-        int row = tanleAreas.getSelectedRow();
-        Area objArea = modelo.get(row);
-        this.changueState(objArea);
-        return objArea;
+     private Author selectedCurrentNode() {
+        LeTableModel<Author> modelo = (LeTableModel<Author>) tableAuthor.getModel();
+        int row = tableAuthor.getSelectedRow();
+        Author node = modelo.get(row);
+        this.changueState(node);
+        return node;
     }
-
-    private void tanleAreasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tanleAreasMouseClicked
+    private void tableAuthorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableAuthorMouseClicked
 
         if (evt.getClickCount() == 2 && evt.getButton() == MouseEvent.BUTTON1) {
 
@@ -392,18 +350,21 @@ public class FrmArea extends javax.swing.JDialog {
             floatMen.setVisible(true);
 
         } else {
-            this.selectedCurrentArea();
+            this.selectedCurrentNode();
         }
 
-
-    }//GEN-LAST:event_tanleAreasMouseClicked
-
+    }//GEN-LAST:event_tableAuthorMouseClicked
+  private void resolvePopup() {
+        if (floatMen.isVisible()) {
+            floatMen.setVisible(false);
+        }
+    }
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
         try {
             // TODO add your handling code here:
             int resp = Dialogs.confirmMessage("Desear eliminar este registro", "Aviso");
             if (resp == JOptionPane.OK_OPTION) {
-                Optional<Area> optArea = this.areacontroller.deleteNode(this.currentArea.getCodArea());
+                Optional<Author> optArea = this.conrtroller.deleteNode(this.currentNode.getCodigo());
                 if (optArea.isPresent()) {
                     Dialogs.successMessage("Se ha eliminado un registro");
                     this.changueState(null);
@@ -411,57 +372,21 @@ public class FrmArea extends javax.swing.JDialog {
                 } else {
                     throw new SQLException();
                 }
-                this.resolvePopup();
+             
             }
+               this.resolvePopup();
 
         } catch (SQLException ex) {
             Dialogs.bderrorMessage();
         }
-
     }//GEN-LAST:event_deleteActionPerformed
 
-    private void resolvePopup() {
-        if (floatMen.isVisible()) {
-            floatMen.setVisible(false);
-        }
-    }
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         // TODO add your handling code here:
-        if (floatMen.isVisible()) {
+             if (floatMen.isVisible()) {
             floatMen.setVisible(false);
         }
     }//GEN-LAST:event_formWindowClosed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-        this.clean();
-     
-    }//GEN-LAST:event_jButton2ActionPerformed
-
-    private void supendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supendActionPerformed
-        // TODO add your handling code here:
-
-        try {
-            // TODO add your handling code here:
-            this.selectedCurrentArea();
-
-            this.currentArea.setVigencia(!this.currentArea.isVigencia());
-            Optional<Area> optArea = this.areacontroller.updateNode(this.currentArea.getCodArea(), this.currentArea);
-            if (optArea.isPresent()) {
-                Dialogs.successMessage("Se actualizo el estado");
-
-                this.changueState(optArea.get());
-                this.fillTable(null);
-                this.resolvePopup();
-            } else {
-                throw new Exception();
-            }
-        } catch (SQLException ex) {
-            Dialogs.bderrorMessage();
-        } catch (Exception ex) {
-            Dialogs.bderrorMessage();
-        }
-    }//GEN-LAST:event_supendActionPerformed
 
     /**
      * @param args the command line arguments
@@ -480,20 +405,20 @@ public class FrmArea extends javax.swing.JDialog {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmArea.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmArea.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmArea.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmArea.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmAutor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                FrmArea dialog = new FrmArea(new javax.swing.JFrame(), true);
+                FrmAutor dialog = new FrmAutor(new javax.swing.JFrame(), true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {
@@ -507,31 +432,29 @@ public class FrmArea extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel Area;
-    private javax.swing.JButton btnGenerateCode;
     private javax.swing.JButton btnSave;
     private javax.swing.JPanel buttons;
-    private javax.swing.JPanel codigo;
     private javax.swing.JPanel container;
     private javax.swing.JMenuItem delete;
     private javax.swing.JPopupMenu floatMen;
     private javax.swing.JPanel form;
-    private javax.swing.JPanel input_codigo;
+    private javax.swing.JPanel input_apellidos;
+    private javax.swing.JPanel input_fechanacimiento;
     private javax.swing.JPanel input_nombre;
-    private javax.swing.JPanel input_vigencia;
+    private javax.swing.JPanel input_pais;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JScrollPane jScrollPane1;
+    private com.toedter.calendar.JDateChooser jdateNacimiento;
     private javax.swing.JLabel lblTotalArea;
-    private javax.swing.JRadioButton stdSuspend;
-    private javax.swing.JRadioButton stdVigente;
-    private javax.swing.JMenuItem supend;
+    private javax.swing.JTable tableAuthor;
     private javax.swing.JPanel table_pane;
-    private javax.swing.JTable tanleAreas;
-    private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtApellidos;
     private javax.swing.JTextField txtName;
-    private javax.swing.JPanel vigencia;
+    private javax.swing.JTextField txtPais;
     // End of variables declaration//GEN-END:variables
 }

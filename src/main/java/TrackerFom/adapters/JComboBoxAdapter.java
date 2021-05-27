@@ -23,8 +23,7 @@ public class JComboBoxAdapter extends   Adapter {
         if(Float.class == field.type){
             return  Float.parseFloat(value);
         }
-        System.err.println(String.format("%s  class type not found or not supported" , field.type.getClass().getName()));
-        return null;
+        return co.getSelectedItem();
 
     }
 
@@ -36,6 +35,6 @@ public class JComboBoxAdapter extends   Adapter {
 
     @Override
     public boolean isValid() {
-        return false;
+        return true;
     }
 }

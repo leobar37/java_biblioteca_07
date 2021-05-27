@@ -17,8 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import globals.Constants;
 
-
-
 public class bdConnection {
 
     private static Connection conn = null;
@@ -36,7 +34,7 @@ public class bdConnection {
         Properties properties = new Properties();
         properties.setProperty("user", Constants.USER);
         properties.setProperty("password", Constants.password);
-        
+
         try {
             bdConnection.registerDriver();
             bdConnection.conn = DriverManager.getConnection(bdConnection.getUrl(Constants.bd, Constants.host), properties);
@@ -48,10 +46,27 @@ public class bdConnection {
         return bdConnection.conn;
     }
 
-    public static <T> T  secureConnection(ConnectionCallback<T> call) throws SQLException {
-           T value = call.callback(getConnection());
-            getConnection().close();
-            return  value;
+    public static <T> T secureConnection(ConnectionCallback<T> call) throws SQLException {
+        T value = call.callback(getConnection());
+        getConnection().close();
+        return value;
+    }
+
+    public  <T> T transaction(ConnectionCallback<T> call) throws SQLException {
+        Connection con = getConnection();
+        try {
+            con.setAutoCommit(false);
+
+            T value = call.callback(con);
+            con.commit();
+            return value;
+        } catch (SQLException e) {
+            e.printStackTrace();
+
+            con.rollback();
+            throw new SQLException();
+        }
+
     }
 
     public static Statement getStatement() {
@@ -68,4 +83,3 @@ public class bdConnection {
     }
 
 }
-

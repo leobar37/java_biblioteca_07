@@ -23,6 +23,8 @@ public  class Constants{
    // alternatives SHA1 - MD5
    public final static String  ALGORTIH_PASSWORD  = "MD5";
    
+   public final static boolean  isDev = true;
+   
    public final static Dimension sizeWindow = new Dimension(1100, 700);
 
    public static final int HEIGHTINPUT = 38;

@@ -5,30 +5,51 @@
  */
 package view;
 
+import TrackerFom.TrackerForm;
+import controllers.UsuarioController;
+import globals.Constants;
+import java.sql.SQLException;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
-
+import models.User;
+import utils.Dialogs;
+import utils.Hash;
+import utils.Uiutils;
 
 public class LoguinForm extends javax.swing.JDialog {
-
-  
+    
+    TrackerForm formTracker = new TrackerForm();
+    UsuarioController controller = UsuarioController.instance();
+    
     public LoguinForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        initComponents(); 
-    }
-     
- 
-    public static LoguinForm open(){
-      LoguinForm form = new LoguinForm(null, false);
-      form.setLocationRelativeTo(null);
-      form.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-      form.setVisible(true);
-   
-     return form;
+        initComponents();
     }
     
-   
+    private void initFields() {
+        this.formTracker.addField("usuario", txtUser, String.class, user -> {
+            return user.isEmpty();
+        }, "El usuario es Requerido");
+        
+    }
+    
+    public static LoguinForm open() {
+        LoguinForm form = new LoguinForm(null, false);
+        form.setLocationRelativeTo(null);
+        form.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        form.setVisible(true);
+        
+        return form;
+    }
+    
+    private void clean() {
+        this.formTracker.cleanForm();
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -209,10 +230,33 @@ public class LoguinForm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       
-        frmPrincipal.open();
-       
-   /*     try {
+        
+        if (this.formTracker.isValid()) {
+            try {
+                //frmPrincipal.open();
+                String username = txtUser.getText();
+                String brutPasssword = Uiutils.getPassword(txtPasssword);
+                
+                String password = Hash.encript(brutPasssword);
+                
+                Optional<User> validateUser = controller.validateUser(password, username);
+                
+                if (validateUser.isPresent() || Constants.isDev) {
+                    frmPrincipal.open();
+                    this.dispose();
+                } else {
+                    Dialogs.errorMessage("Credenciales incorrectas");
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(LoguinForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        } else {
+            Dialogs.errorMessage(this.formTracker.getError());
+        }
+
+        /*     try {
             String userName= txtUser.getText();
             String password=  Uiutils.getPassword(txtPasssword);
             Optional<User>  useropt = ControllerUser.validateUser(userName, password);
@@ -227,11 +271,8 @@ public class LoguinForm extends javax.swing.JDialog {
             //  display message error bd
             
         }
-        */
-        
-        
-        
-         
+         */
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

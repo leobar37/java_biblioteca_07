@@ -212,7 +212,7 @@ public class FrmEditorial extends javax.swing.JFrame {
         modelo.addColumns(Arrays.asList(columns));
 
         try {
-            this.editorialController.updateNodes().stream().forEach(e -> {
+            this.editorialController.updateNodes("").stream().forEach(e -> {
                 System.out.println("add row");
                 ///table.setModel(model);
                 panel.add(table);

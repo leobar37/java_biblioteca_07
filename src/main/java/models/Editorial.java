@@ -44,8 +44,13 @@ public class Editorial {
     public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
-  
 
+    @Override
+    public String toString() {
+        return getNombre() + "-" +  getCodigo();
+    }
+  
+ 
   
  
 }

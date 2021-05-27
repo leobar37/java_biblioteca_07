@@ -14,7 +14,9 @@ repositories {
     maven{
         url "gradle.org"
     }
-   
+    maven {
+        url "mvnrepository.com"
+    }
 }
 
 mainClassName = 'main.main'
@@ -24,6 +26,7 @@ dependencies {
     implementation 'io.github.vincenzopalazzo:material-ui-swing:1.1.2-rc1'
     compile(name : 'miglayout-3.5.5' , ext : 'jar')
     compile(name : 'edisoncorSX' , ext : 'jar')
+    compile(name : 'sqlbuilder-1.2' , ext : 'jar')
     compile fileTree(dir : 'libs/jcalendar' , include :'*.jar')
     implementation 'com.formdev:flatlaf-swingx:1.1.2'
     implementation 'org.postgresql:postgresql:42.2.20'

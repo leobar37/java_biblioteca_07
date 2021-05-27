@@ -52,14 +52,15 @@ public class AreaController extends BaseController<Area> {
             return Area.getNodeOfResult(pr.executeQuery(), true);
         });
     }
-    public Optional<Area> deleteNode(int code) throws SQLException{
-         return bdConnection.secureConnection(conn -> {
+
+    public Optional<Area> deleteNode(int code) throws SQLException {
+        return bdConnection.secureConnection(conn -> {
             PreparedStatement pr = conn.prepareStatement("delete from area where codigoare = ? returning *");
             pr.setInt(1, code);
             return Area.getNodeOfResult(pr.executeQuery(), true);
-        });  
+        });
     }
-    
+
     public Optional<Area> createNode(Area objArea) throws SQLException {
         return bdConnection.secureConnection(conn -> {
             PreparedStatement pr = conn.prepareStatement("INSERT INTO public.area (\n"
@@ -92,20 +93,26 @@ public class AreaController extends BaseController<Area> {
             }
         });
     }
-    
-    public LinkedList<Area> updateNodes() throws SQLException {
+
+    public  Optional<Area> getNode(int code) throws SQLException {
+        return this.updateNodes(String.format("where codigoare = %s", code)).stream().findFirst();
+    }
+
+    public LinkedList<Area> updateNodes(String query) throws SQLException {
+
         return bdConnection.secureConnection(conn -> {
             try {
-             PreparedStatement pr = conn.prepareStatement("select * from area");
-            LinkedList<Area> list = new LinkedList<Area>();
-            ResultSet rs = pr.executeQuery();
-            while (rs.next()) {
-                list.add(Area.getNodeOfResult(rs).get());
-            }
-             
-            return list;
+
+                PreparedStatement pr = conn.prepareStatement("select * from area " + query);
+                LinkedList<Area> list = new LinkedList<Area>();
+                ResultSet rs = pr.executeQuery();
+                while (rs.next()) {
+                    list.add(Area.getNodeOfResult(rs).get());
+                }
+
+                return list;
             } catch (Exception e) {
-               e.printStackTrace();
+                e.printStackTrace();
                 return null;
             }
         });

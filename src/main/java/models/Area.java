@@ -48,7 +48,15 @@ public class Area {
     public void setVigencia(boolean vigencia) {
         this.vigencia = vigencia;
     }
+    public String labelVigencia(){
+        return this.isVigencia() ? "Vigente" : "suspendido";
+    }
 
+    @Override
+    public String toString() {
+        return getNombre() + " - " +labelVigencia();
+    }
+    
      
     public static Optional<Area> getNodeOfResult(ResultSet res) throws SQLException{
         try {
