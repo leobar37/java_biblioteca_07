@@ -29,12 +29,11 @@ public class bdConnection {
     private bdConnection() {
         //
     }
-
+    // Deprecated
     public static Connection getConnection() {
         Properties properties = new Properties();
         properties.setProperty("user", Constants.USER);
         properties.setProperty("password", Constants.password);
-
         try {
             bdConnection.registerDriver();
             bdConnection.conn = DriverManager.getConnection(bdConnection.getUrl(Constants.bd, Constants.host), properties);
@@ -60,7 +59,7 @@ public class bdConnection {
             return st.executeQuery();
         });
     }
-
+    
     public static boolean multiplesQueriesTransaction(String... queries) throws SQLException {
         return bdConnection.transaction(conn -> {
 
@@ -86,7 +85,6 @@ public class bdConnection {
             return value;
         } catch (SQLException e) {
             e.printStackTrace();
-
             con.rollback();
             throw new SQLException(e);
         }

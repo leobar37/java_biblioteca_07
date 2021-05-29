@@ -14,7 +14,6 @@ import java.awt.Dimension;
 // bd 
 
 public  class Constants{
-  
     // configuration bd
    public final static String USER = "postgres";
    public  final static String password = "alfk3458";
