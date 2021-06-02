@@ -1,7 +1,7 @@
 apply plugin: 'java'
+
 apply plugin: 'jacoco'
 apply plugin: 'application'
-
 
 
 repositories {
@@ -17,9 +17,21 @@ repositories {
     maven {
         url "mvnrepository.com"
     }
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+}
+mainClassName = 'main.main'
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'main.main'
+        )
+    }
+    from { configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) } } 
+
 }
 
-mainClassName = 'main.main'
 
 dependencies {
     implementation 'com.formdev:flatlaf:1.1.2'
@@ -27,8 +39,8 @@ dependencies {
     compile(name : 'miglayout-3.5.5' , ext : 'jar')
     compile(name : 'edisoncorSX' , ext : 'jar')
     compile(name : 'sqlbuilder-1.2' , ext : 'jar')
+    compile(name : 'postgresql-42.2.16' , ext : 'jar')
     compile fileTree(dir : 'libs/jcalendar' , include :'*.jar')
-    implementation 'com.formdev:flatlaf-swingx:1.1.2'
-    implementation 'org.postgresql:postgresql:42.2.20'
     implementation 'io.reactivex.rxjava3:rxjava:3.0.13-RC4'
+
 }

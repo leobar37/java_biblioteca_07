@@ -12,7 +12,6 @@ package config;
 import java.sql.*;
 
 import java.util.Properties;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import globals.Constants;
@@ -30,20 +29,23 @@ public class bdConnection {
         //
     }
 
-    public static Connection getConnection() {
+    public static Connection getConnection() throws SQLException {
         Properties properties = new Properties();
         properties.setProperty("user", Constants.USER);
         properties.setProperty("password", Constants.password);
-
         try {
             bdConnection.registerDriver();
             bdConnection.conn = DriverManager.getConnection(bdConnection.getUrl(Constants.bd, Constants.host), properties);
+              
         } catch (SQLException ex) {
             Logger.getLogger(bdConnection.class.getName()).log(Level.SEVERE, "Error connection bd", ex);
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(bdConnection.class.getName()).log(Level.SEVERE, "class not found", ex);
         }finally{
-            bdConnection.conn.close();
+            if(bdConnection.conn !=  null){
+               // bdConnection.conn.close();
+            }
+            
         }
         return bdConnection.conn;
     }
