@@ -19,6 +19,7 @@ import java.util.logging.Logger;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
  *
@@ -50,16 +51,7 @@ public class Hash {
     }
 
     // return 
-    public static SecretKeySpec crearClave(String clave) throws UnsupportedEncodingException, NoSuchAlgorithmException {
-        byte[] claveEncriptacion = clave.getBytes("UTF-8");
-
-        MessageDigest sha = MessageDigest.getInstance("SHA-1");
-        claveEncriptacion = sha.digest(claveEncriptacion);
-        claveEncriptacion = java.util.Arrays.copyOf(claveEncriptacion, 16);
-        SecretKeySpec secretKey = new SecretKeySpec(claveEncriptacion, "AES");
-
-        return secretKey;
-    }
+    
 
     /* Retorna un hash MD5 a partir de un texto */
     public static String md5(String txt) {
@@ -72,33 +64,15 @@ public class Hash {
     }
 
     public static String encript(String password) {
-        try {
-            /*
-            A cryptographically strong random number minimally complies with the statistical
-            random number generator tests specified in FIPS 140-2, Security Requirements for 
-            Cryptographic Modules, section 4.9.1. Additionally, SecureRandom must produce 
-            non-deterministic output. Therefore any seed material passed to a SecureRandom
-            object must be unpredictable, and all SecureRandom output sequences must
-            be cryptographically strong, as described in RFC 1750: Randomness
-            Recommendations for Security.
-            */
-            SecureRandom random = new SecureRandom();
-            byte[] salt = new byte[16];
-            random.nextBytes(salt);
-            KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
-            SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-            byte[] hash = factory.generateSecret(spec).getEncoded();
-            return Base64.getEncoder().encodeToString(hash);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
-            Logger.getLogger(Hash.class.getName()).log(Level.SEVERE, null, ex);
-            return  null;
-        }
-     
+        String  paswordEncript = BCrypt.hashpw(password, BCrypt.gensalt());
+        return paswordEncript;  
     }
-
+    
     public static boolean compareHash(String password, String hashPassword) {
-        String passHashed = Hash.encript(password);
-        return passHashed.equals(hashPassword);
+        return  BCrypt.checkpw(password, hashPassword);
     }
+    
+   
+ 
 
 }

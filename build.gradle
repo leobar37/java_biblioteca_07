@@ -40,6 +40,7 @@ dependencies {
     compile(name : 'edisoncorSX' , ext : 'jar')
     compile(name : 'sqlbuilder-1.2' , ext : 'jar')
     compile(name : 'postgresql-42.2.16' , ext : 'jar')
+    compile(name : 'jbcrypt-0.4' , ext : 'jar')
     compile fileTree(dir : 'libs/jcalendar' , include :'*.jar')
     implementation 'io.reactivex.rxjava3:rxjava:3.0.13-RC4'
 

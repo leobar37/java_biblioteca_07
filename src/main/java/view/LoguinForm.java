@@ -6,6 +6,7 @@
 package view;
 
 import TrackerFom.TrackerForm;
+
 import controllers.UsuarioController;
 import globals.Constants;
 import java.sql.SQLException;
@@ -20,36 +21,36 @@ import utils.Hash;
 import utils.Uiutils;
 
 public class LoguinForm extends javax.swing.JDialog {
-    
+
     TrackerForm formTracker = new TrackerForm();
     UsuarioController controller = UsuarioController.instance();
-    
+
     public LoguinForm(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         initComponents();
     }
-    
+
     private void initFields() {
         this.formTracker.addField("usuario", txtUser, String.class, user -> {
             return user.isEmpty();
         }, "El usuario es Requerido");
-        
+
     }
-    
+
     public static LoguinForm open() {
         LoguinForm form = new LoguinForm(null, false);
         form.setLocationRelativeTo(null);
         form.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         form.setVisible(true);
-        
+
         return form;
     }
-    
+
     private void clean() {
         this.formTracker.cleanForm();
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -230,28 +231,27 @@ public class LoguinForm extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         if (this.formTracker.isValid()) {
             try {
                 //frmPrincipal.open();
                 String username = txtUser.getText();
-                String brutPasssword = Uiutils.getPassword(txtPasssword);
-                
-                String password = Hash.encript(brutPasssword);
-                
-                Optional<User> validateUser = controller.validateUser(password, username);
-                
-                if (validateUser.isPresent() || Constants.isDev) {
+                String passsword = Uiutils.getPassword(txtPasssword);
+
+                Optional<User> validateUser = controller.validateUser(passsword, username);
+
+                if (validateUser.isPresent()) {
                     frmPrincipal.open();
                     this.dispose();
+
                 } else {
                     Dialogs.errorMessage("Credenciales incorrectas");
                 }
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(LoguinForm.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         } else {
             Dialogs.errorMessage(this.formTracker.getError());
         }

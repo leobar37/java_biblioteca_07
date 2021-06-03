@@ -14,6 +14,7 @@ import java.util.Optional;
 import models.Area;
 import models.User;
 import utils.Hash;
+import view.frmPrincipal;
 
 /**
  *
@@ -46,7 +47,7 @@ public class UsuarioController extends BaseController<Area> {
         statement.setString(2, user.getName());
         statement.setString(3, user.getDirection());
         statement.setString(4, user.getPhone());
-        statement.setString(5, user.getPassword());
+        statement.setString(5, Hash.encript(user.getPassword()));
         statement.setString(6, user.getCuestion());
         statement.setString(7, user.getRptaCuestion());
         statement.setString(8, user.getUsername());
@@ -74,8 +75,15 @@ public class UsuarioController extends BaseController<Area> {
         String cuestion = res.getObject("cuestion", String.class);
         String rpyacuestion = res.getObject("rptaCuestion", String.class);
         String password = res.getObject("password", String.class);
-        boolean estado = res.getObject("estado", Boolean.class);
-        return Optional.of(new User(dni, name, direction, phone, password, cuestion, rpyacuestion, estado));
+        // boolean estado = res.getObject("estado", Boolean.class);
+        // User user = new User(String dni, String name, String direction, String phone);    
+        User user = new User(dni, name, direction, phone);
+        user.setPassword(password);
+        user.setCuestion(cuestion);
+        user.setRptaCuestion(rpyacuestion);
+//return Optional.of(new );
+
+        return Optional.of(user);
     }
 
     public Optional<User> searchUser(String dni) throws SQLException {
@@ -87,15 +95,17 @@ public class UsuarioController extends BaseController<Area> {
     }
 
     public Optional<User> validateUser(String password, String username) throws SQLException {
-        PreparedStatement statement = bdConnection.getConnection().prepareStatement("select * from users where password = ? and username = ?");
-        statement.setString(1, Hash.encript(password));
-        statement.setString(2, username);
+        PreparedStatement statement = bdConnection.getConnection().prepareStatement("select * from users where username = ?");
+        statement.setString(1, username);
         ResultSet res = statement.executeQuery();
         Optional<User> user = getFirstResult(res);
+
         if (user.isPresent()) {
+            if (!Hash.compareHash(password, user.get().getPassword())) {
+                return Optional.empty();
+            }
             this.user = user.get();
         }
-
         return user;
     }
 

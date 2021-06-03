@@ -13,7 +13,8 @@ public class User extends Person{
        super(dni, name, direction, phone);
         
     }
-
+    
+  
     public User(String dni, String name, String direction, String phone, String password, String cuestion, String rptaCuestion, boolean  estado) {
         super(dni, name, direction, phone);
         this.password = password;
